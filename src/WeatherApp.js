@@ -150,12 +150,12 @@ const WeatherApp = () => {
                         Joy Muthoni
                     </a>{' '}
                     and is{' '}
-                    <a href="https://github.com/muthoni856/Weather-App" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.shecodes.io/graduates/121537-joy-muthoni" target="_blank" rel="noopener noreferrer">
                         on GitHub
                     </a>{' '}
                     and{' '}
                     <a href="https://breezybelle.netlify.app/" target="_blank" rel="noopener noreferrer">
-                        hosted on Netlify
+                        hosted on Netlify!
                     </a>
                 </p>
             </footer>
