@@ -150,7 +150,7 @@ const WeatherApp = () => {
                         Joy Muthoni
                     </a>{' '}
                     and is{' '}
-                    <a href="https://www.shecodes.io/graduates/121537-joy-muthoni" target="_blank" rel="noopener noreferrer">
+                    <a href="https://github.com/muthoni856/breezybelles-react-weather-application" target="_blank" rel="noopener noreferrer">
                         on GitHub
                     </a>{' '}
                     and{' '}
