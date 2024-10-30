@@ -23,7 +23,7 @@ const WeatherApp = () => {
         const apiKey = "6b025c7d6331b719f34f6a74oab04ft9";
         const apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}`;
         axios.get(apiUrl).then(showForecast);
-    }, [showForecast]); // Add showForecast as a dependency here
+    }, [showForecast]); 
 
     const updateWeather = useCallback((response) => {
         const weather = response.data.daily[0];
@@ -36,18 +36,18 @@ const WeatherApp = () => {
             time: formatDate(weather.time),
             emoji: weather.condition.icon_url,
         });
-        getForecast(response.data.city); // Call getForecast with the updated city data
-    }, [getForecast]); // Add getForecast as a dependency
+        getForecast(response.data.city); 
+    }, [getForecast]); 
 
     const searchCity = useCallback((city) => {
         const apiKey = "6b025c7d6331b719f34f6a74oab04ft9";
         const apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}`;
         axios.get(apiUrl).then(updateWeather);
-    }, [updateWeather]); // Include updateWeather as a dependency
+    }, [updateWeather]); 
 
     useEffect(() => {
         searchCity(city);
-    }, [city, searchCity]); // Add searchCity as a dependency here
+    }, [city, searchCity]); 
 
     const formatDate = (timestamp) => {
         const date = new Date(timestamp * 1000);
@@ -74,14 +74,14 @@ const WeatherApp = () => {
     };
 
     const getTemperature = (tempCelsius) => {
-        return unit === "C" ? tempCelsius : (tempCelsius * 9) / 5 + 32;
+        return unit === "C" ? tempCelsius : Math.round((tempCelsius * 9) / 5 + 32);
     };
 
     return (
         <div className="overlay">
             <header>
                 <div className="logo">
-                    <img className="image" src="src/images/image.png" alt="logo" />
+                    <img className="image" src="https://i.pinimg.com/originals/b2/b8/74/b2b874f5acecbbee0d94635d3ef70c31.gif" alt="logo" />
                     <h1 className="text">Breezy Belle</h1>
                 </div>
                 <form className="form" onSubmit={handleSearchSubmit}>
