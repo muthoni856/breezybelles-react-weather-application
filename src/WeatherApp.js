@@ -79,7 +79,7 @@ const WeatherApp = () => {
         <div className="overlay">
             <header>
                 <div className="logo">
-                    <img className="image" src="src\images\image.png" alt="logo" />
+                    <img className="image" src="https://i.pinimg.com/564x/f5/22/7e/f5227e2d7ea8fcf9a3fd4b47bfdd720e.jpg" alt="logo" />
                     <h1 className="text">Breezy Belle</h1>
                 </div>
                 <form className="form" onSubmit={handleSearchSubmit}>
