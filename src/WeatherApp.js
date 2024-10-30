@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -7,13 +7,25 @@ const WeatherApp = () => {
     const [weatherData, setWeatherData] = useState(null);
     const [forecastData, setForecastData] = useState([]);
     const [searchInput, setSearchInput] = useState('');
-    const[unit,setUnit]=useState("C");
+    const [unit, setUnit] = useState("C");
 
-    useEffect(() => {
-        searchCity(city);
-    }, [city]);
+    const showForecast = useCallback((response) => {
+        const forecast = response.data.daily.map((day) => ({
+            time: formatDay(day.time),
+            icon: day.condition.icon_url,
+            max: Math.round(day.temperature.maximum),
+            min: Math.round(day.temperature.minimum),
+        }));
+        setForecastData(forecast);
+    }, []);
 
-    const updateWeather = (response) => {
+    const getForecast = useCallback((city) => {
+        const apiKey = "6b025c7d6331b719f34f6a74oab04ft9";
+        const apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}`;
+        axios.get(apiUrl).then(showForecast);
+    }, [showForecast]); // Add showForecast as a dependency here
+
+    const updateWeather = useCallback((response) => {
         const weather = response.data.daily[0];
         setWeatherData({
             city: response.data.city,
@@ -24,24 +36,18 @@ const WeatherApp = () => {
             time: formatDate(weather.time),
             emoji: weather.condition.icon_url,
         });
-        getForecast(response.data.city);
-    };
+        getForecast(response.data.city); // Call getForecast with the updated city data
+    }, [getForecast]); // Add getForecast as a dependency
 
-    const getForecast = (city) => {
+    const searchCity = useCallback((city) => {
         const apiKey = "6b025c7d6331b719f34f6a74oab04ft9";
         const apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}`;
-        axios.get(apiUrl).then(showForecast);
-    };
+        axios.get(apiUrl).then(updateWeather);
+    }, [updateWeather]); // Include updateWeather as a dependency
 
-    const showForecast = (response) => {
-        const forecast = response.data.daily.map((day) => ({
-            time: formatDay(day.time),
-            icon: day.condition.icon_url,
-            max: Math.round(day.temperature.maximum),
-            min: Math.round(day.temperature.minimum),
-        }));
-        setForecastData(forecast);
-    };
+    useEffect(() => {
+        searchCity(city);
+    }, [city, searchCity]); // Add searchCity as a dependency here
 
     const formatDate = (timestamp) => {
         const date = new Date(timestamp * 1000);
@@ -58,28 +64,24 @@ const WeatherApp = () => {
         return days[date.getDay()];
     };
 
-    const searchCity = (city) => {
-        const apiKey = "6b025c7d6331b719f34f6a74oab04ft9";
-        const apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}`;
-        axios.get(apiUrl).then(updateWeather);
-    };
-
     const handleSearchSubmit = (event) => {
         event.preventDefault();
         setCity(searchInput);
     };
-    const toggleUnit=()=>{
-      setUnit(prevUnit=>(prevUnit==="C" ?"F": "C"));
+
+    const toggleUnit = () => {
+        setUnit(prevUnit => (prevUnit === "C" ? "F" : "C"));
     };
-    const getTemperature=(tempCelsius)=>{
-      return unit==="C"?tempCelsius:Math.round(tempCelsius*9/5)+32;
+
+    const getTemperature = (tempCelsius) => {
+        return unit === "C" ? tempCelsius : (tempCelsius * 9) / 5 + 32;
     };
 
     return (
         <div className="overlay">
             <header>
                 <div className="logo">
-                    <img className="image" src="https://i.pinimg.com/564x/f5/22/7e/f5227e2d7ea8fcf9a3fd4b47bfdd720e.jpg" alt="logo" />
+                    <img className="image" src="src/images/image.png" alt="logo" />
                     <h1 className="text">Breezy Belle</h1>
                 </div>
                 <form className="form" onSubmit={handleSearchSubmit}>
@@ -114,9 +116,11 @@ const WeatherApp = () => {
                                 <img src={weatherData.emoji} className="weather-emoji" alt="weather icon" />
                             </div>
                             <div className="weather-value" id="weather-value">
-                                {getTemperature(weatherData.temperature)}
+                                {getTemperature(weatherData.temperature)} {/* Call getTemperature here */}
                             </div>
-                            <div className="weather-celcius" onClick={toggleUnit}>°C|°F</div>
+                            <div className="weather-celcius" onClick={toggleUnit}> {/* Toggle unit on click */}
+                                °C | °F
+                            </div>
                         </div>
                     )}
                 </div>
@@ -146,12 +150,12 @@ const WeatherApp = () => {
                         Joy Muthoni
                     </a>{' '}
                     and is{' '}
-                    <a href="https://github.com/muthoni856/breezybelles-react-weather-application" target="_blank" rel="noopener noreferrer">
+                    <a href="https://github.com/muthoni856/Weather-App" target="_blank" rel="noopener noreferrer">
                         on GitHub
                     </a>{' '}
                     and{' '}
                     <a href="https://breezybelle.netlify.app/" target="_blank" rel="noopener noreferrer">
-                        hosted on Netlify!
+                        hosted on Netlify
                     </a>
                 </p>
             </footer>
